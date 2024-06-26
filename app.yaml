@@ -1,0 +1,37 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: helidon-postgresql-jpa
+  labels:
+    app: helidon-postgresql-jpa
+spec:
+  type: ClusterIP
+  selector:
+    app: helidon-postgresql-jpa
+  ports:
+    - name: tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: helidon-postgresql-jpa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helidon-postgresql-jpa
+  template:
+    metadata:
+      labels:
+        app: helidon-postgresql-jpa
+        version: v1
+    spec:
+      containers:
+      - name: helidon-postgresql-jpa
+        image: helidon-postgresql-jpa
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
